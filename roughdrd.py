@@ -15,4 +15,4 @@ word = 'abc'
 
 print(len(word))
 '''
-print("hi")
+print("hi kriti")
