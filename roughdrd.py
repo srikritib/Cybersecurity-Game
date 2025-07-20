@@ -116,3 +116,4 @@ def columnar_transposition_cipher(word, key):
 print('newchange')
 print ('newchange1')
 print('22')
+print('44')
