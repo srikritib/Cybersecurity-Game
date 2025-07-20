@@ -111,3 +111,6 @@ def columnar_transposition_cipher(word, key):
             ciphertext += row[col_idx]
 
     return ciphertext
+
+
+print('newchange')
