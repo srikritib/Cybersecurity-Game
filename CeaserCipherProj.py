@@ -1,70 +1,54 @@
-'''
-Code summary: I want to make a ceasar cipher game. I want to have a list of words and tell the user about the word choices.
-Then I will ask the user if they want to play the game (Y/N), till the user hits N or the user gets the guess right, the game will loop.
-The user has to guess the letter based on the coded letter and basically has to decrypt the ceaser cipher.\
-'''
 
-'''
-1) First make a list containing a string of 5 words. Then have an input statement welcoming the user to the game.
-2) Then print a list of answer choices of words a) word 1, b) word 2... etc.
-3) The program should contain a list of numbers from 1 to 5.
-4) Have a while loop that will continue till the word matches the correct word or the user presses N. (User clicks Y to play the game).
-5) Within the while loop there should be a function call.
-6) This function contains a for loop iterating through the number list. The number represents the amount of spaces to the right the letter
-gets decoded in. (if number is 1, A becomes B in the answer choice.)
-'''
 
+import random
+
+#Level 1
 def substitution_cipher():
+    print("\n\nWelcome to the subsitution cipher game. In this game you will get a bunch of letters that don't make up a word.\n")
+    print("The encrypted word you will see is actually the result of a real word being shifted down multiple letters of the alphabet\n (for example, if the word was cat, and each word was shifted by 2 letters, then the encrypted word will be ecv).\n")
+    print("Your job is to figure out the actual word from a list of words by seeing how many letters the actual word has shifted.")
     
-    import random
+    #import random
     random_num = random.randint(1, 3)
     
-    Answer_dict = {'A': 'lord', 'B': 'of', 'C': 'the', 'D': 'rings', 'E': 'lords', 'F': 'ring', 'G': 'Hobbits', 'H': 'Frodo', 'I': 'Gandalf'}
-    
+    Answer_dict = {'A': 'lord', 'B': 'Frodo', 'C': 'Gandalf', 'D': 'rings', 'E': 'lords', 'F': 'ring', 'G': 'Hobbits', 'H': 'Frodo', 'I': 'Gandalf'} 
+    print(Answer_dict)
     Answer_word_list = list(Answer_dict.values())
     
     Answer_choice_list = list(Answer_dict.keys())
 
-
-    print("Welcome to level 1!\n\n"
-                          "QUICK!! Frodo needs to drop the ring into Mount Doom but it is encrypted by a substitution cipher. \n\n"
-                          "The following answer choices are the possible keys to the cipher: \n\n")
-    print(Answer_dict,"\n\n")
-    print("You will be given a value that has been encrypted by a substitution cipher, you will have 3 tries to decrypt the value and find the key to help Frodo!\n")
-    print("You can either type in the letter of the answer choice, or the word\n")
-    print("This is your encrypted word, good luck!\n\n")
-
     x = 1
     z = 3
 
-    word = random.choice(Answer_word_list)
-    #ans = "Lord"
-    word = word.upper()
+    wording = random.choice(Answer_word_list)
+    wording = wording.upper()
 
     #Takes every word in the list and shifts the letters by one to the right. 
     result = ''
-    for i in word:
+    for i in wording:
         encrypted = chr(ord(i) + (random_num)) #Ascii
         result += encrypted
-        result += "\n"
+    
+    print("\n\nThe word you will see now is the encrypted word:\n")
     print(result)
-
+    print("\n\n") 
 
     #Takes in user's 3 guesses
     #shorten the if then statements
     while(x <= 3):
-        user_q = input("Type in your guess (Type in either the associated letter or word of your choice):\n")
+        user_q = input("Try to guess the actual word from the answer choices, you can choose either the answer choice (A, B, etc) or the word (Lord, Frodo, etc):")
         user_q = user_q.upper()
         if len(user_q) == 1:
-            if word == Answer_dict[user_q].upper():
+            if wording == Answer_dict[user_q].upper():
                 x = 3
                 break
             else:
                 z = z-1
                 print("Wrong answer, you have", z, "guesses left!")
                 x += 1
+
         elif len(user_q) != 1:
-            if word == user_q:
+            if wording == user_q:
                 x = 3
                 break
             else:
@@ -73,51 +57,86 @@ def substitution_cipher():
                 x += 1
 
     if (x == 3):
-        print("Congrats! you guessed correctly! Humanity is saved!!")
-        return random_num
+        print("Congrats! you guessed correctly! Now move onto the Transposition cipher!!") 
     else:
         print("Frodo failed to throw the ring into the volcano, Sauron has the ring now, prepare for ultimate doom...")
-        return random_num
 
 
 
-shifting = substitution_cipher()
-'''
-#continuation of the first game
-def caesar_cipher(random_num):
-    
-    print("Welcome to level 2!\n\n")
-    print("Sauron is still coming after the ring even after Frodo threw it in Mount Doom!\n\n")
-    print("You need to come up with an encryption key on the ring to make sure Sauron can't crack it!\n")
-    print("The good news is you can use the same pattern of letter shifting from level 1 to encrypt a phrase of your choice.\n\n")
+#Level 2
+def transposition_cipher():
+    print("\n\nWelcome to the transposition cipher game. In this game you will get a bunch of letters that don't make up a word.\n")
+    print("The encrypted word you will see is actually the result of a real word being scrambled with some letters that don't belong to the word to try to throw you off.\n")
+    print("Your job is to figure out the actual word from a list of words given.")
 
-    attempts = 3
-    
-    while True: 
-        try:
-            user_pick = int(input("First type in the number of letters the encoded word from level 1 has been shifted away from your answer."))
+    guess_num = 0
+
+    words_list = ['Aragorn', 'Samwise', 'Pippin', 'Sauron'] 
+    print("These are your word choices:\n")
+    print(words_list)
+    key = [4, 2, 3, 1]
+
+    word = random.choice(words_list)
+    word = word.upper()
+    encr = ''
+
+    def temporary_function(subword):
+        temp_encrypted = [''] * len(key)
+        for i in range(len(subword)):
+            temp_encrypted[key[i] - 1] = subword[i]
+        return ''.join(temp_encrypted)
+
+    # Encryption
+    if len(word) <= len(key):
+        encr = temporary_function(word)
+    else:
+        for i in range(0, len(word), len(key)):
+            chunk = word[i:i + len(key)]
+            if len(chunk) < len(key):
+                chunk = chunk.ljust(len(key), 'X')
+            encr += temporary_function(chunk)
+
+    encrypted = encr.upper()
+    print("This is your encrypted word (scrambled word):\n", encrypted)
+
+    # Guessing logic
+    while guess_num < 3:
+        user_guess = input("Enter your decryption guess based on the answer choices: ").upper()
+        if user_guess == word:
+            print("Correct!")
             break
-        except ValueError:
-            print("Invalid input. Please enter a valid integer.")
-            
-    while (attempts > 0):
-        
-        if user_pick == random_num:
-            print("Correct number!")
-            break
-        
         else:
-            attempts -= 1
-            if (attempts > 0):
-                print(f" WRONG, you have {attempts} attempts left")
-                user_pick = int(input())
-            else:
-                print("You have failed...Sauron has the ring now...prepare for doom!")
+            guess_num += 1
+            print(f"Wrong. You have {3 - guess_num} attempts left.")
     
-    phrase = input("Now pick any phrase and type it in, this will serve as your key")
-    print(f"\n Now ")
-            
-    
+    if user_guess != word:
+        print(f"💀 Game Over! The correct word was: {word}")
 
-caesar_cipher(shifting)
-'''
+
+def main():
+    print("Welcome to Mount Doom!!\n Quick! Frodo needs help! He has to drop The One Ring into the volcano but it is blocked by 2 ciphers...\n\n")
+
+    while True:
+        user_input = input("Please pick number 1 or 2. 1 = Substitution cipher, 2 = Transposition cipher. Type 8 to exit: ")
+
+        if user_input == "1":
+            substitution_cipher() 
+        elif user_input == "2":
+            transposition_cipher()
+        elif user_input == "8":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid input, please type 1, 2, or 8.")
+
+
+main()
+
+
+
+
+
+
+
+
+

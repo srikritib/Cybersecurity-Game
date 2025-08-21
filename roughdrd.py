@@ -87,7 +87,7 @@ listing = '123'
 print(listing[:1])
 print(listing[1:5])
 '''
-
+'''
 def columnar_transposition_cipher(word, key):
     import math
 
@@ -112,9 +112,41 @@ def columnar_transposition_cipher(word, key):
 
     return ciphertext
 
+'''
+import random
+def transposition_cipher():
+    print("Level 2: Transposition cipher")
 
-print('newchange')
-print ('newchange1')
-print('22')
-print('44')
-print('33')
+    #Prepare a new list of words
+    words_list = ['Aragorn']#, 'Gandalf']#, 'Frodo Baggins', 'Bilbo Baggins', 'Pippin Took', 'Samwise Gamgee', 'Merry Brandybuck', 'Sauron'] #just character names
+
+    #Key list of numbers
+    key = [4, 2, 3, 1]
+
+    word = random.choice(words_list)
+    number = len(key) #number of values in key
+    encr = ''
+
+    def temporary_function(subword):
+        temp_encrypted = [''] * len(key)
+        for i in range(len(subword)):
+            temp_encrypted[key[i] - 1] = subword[i]
+        return ''.join(temp_encrypted)
+
+    if len(word) <= len(key):
+        encr = temporary_function(word)
+
+    else:
+        for i in range(0, len(word), len(key)):
+            chunk = word[i:i + len(key)]
+            if len(chunk) < len(key):
+                chunk = chunk.ljust(len(key), 'X')  # pad with 'X'
+            encr += temporary_function(chunk)
+    
+    encrypted = ''.join(encr)
+    encrypted = encrypted.upper()
+    return encrypted
+
+shift = transposition_cipher()
+print(shift)
+
